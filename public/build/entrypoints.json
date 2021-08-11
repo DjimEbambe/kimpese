@@ -1,0 +1,37 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.34de5850.js",
+        "/build/169.d0845785.js",
+        "/build/app.334f1a5d.js"
+      ],
+      "css": [
+        "/build/app.ee1415e5.css"
+      ]
+    },
+    "bundle": {
+      "js": [
+        "/build/runtime.34de5850.js",
+        "/build/136.365fef0a.js",
+        "/build/bundle.879249cb.js"
+      ]
+    },
+    "appdark": {
+      "js": [
+        "/build/runtime.34de5850.js"
+      ],
+      "css": [
+        "/build/appdark.7b961da9.css"
+      ]
+    },
+    "style": {
+      "js": [
+        "/build/runtime.34de5850.js"
+      ],
+      "css": [
+        "/build/style.5f83a471.css"
+      ]
+    }
+  }
+}

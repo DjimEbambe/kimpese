@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AccountController!{% endblock %}
+
+{% block content %}
+    <div class="container border p-5">
+        <div class="row">
+            <div class=" col-3 py-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="130" height="120" fill="currentColor" class="bi bi-person-circle float-start m-2" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
+            </div>
+            <div class=" col-sm-3 mt-3">
+                <h2>Dr  {{ app.user.name }} <br></h2><br>
+                <a href="{{ path('app_logout') }}">Déconnexion</a><br>
+                <p class="mt-2"><a href="{{ path('app_logout') }}">Supprimer le compte</a></p>
+            </div>
+            <div class=" col-sm-6">
+                <div class="row border my-3 mx-2">
+                    <div class=" col-4 border-end text-center"><br>0<br> <p>Malades</p></div>
+                    <div class=" col-4 border-end text-center"><br>0<br><p>Visites</p></div>
+                    <div class=" col-4 border-start text-center"><br>0<br><p>Article</p></div>
+                </div>
+            </div>
+        </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Mon profil</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Parametre</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row my-1">
+                    <div class="col-sm-4 my-3 mt-5" > <h4>Informations rélatives liées à votre compte</h4></div>
+                    <div class="col-8">
+                        <div class="card mx-1 me-2" style="width: 18rem;">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <td>Nom</td>
+                                    <td>{{ app.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Téléphone</td>
+                                    <td>{{ app.user.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <td>fonction</td>
+                                    <td>{{ app.user.fonction }}</td>
+                                </tr>
+                                <tr>
+                                    <td>service</td>
+                                    <td>{{ app.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>{{ app.user.fonction }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Date d'inscription</td>
+                                    <td>{{ app.user.createdAt |date("d/m/Y") }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="auth">
+                    <div class="container mt-1 mb-1">
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="col-sm-4">
+                                modifier mot de passe
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card"  style="width: 25rem;">
+                                    {{ form_start(form) }}
+                                    <div class="form-input">
+                                        <i class="bi bi-person-fill"></i>
+                                        {{ form_widget(form.name, {'attr': {'class': 'form-control',  'placeholder':'Nom complet', 'value':app.user.name}}) }}
+                                        <div class="form-error fst-italic">
+                                            {{ form_errors(form.name) }}
+                                        </div>
+                                        <div id="passwordHelpBlock" class="form-help">
+                                            4-30 caractères, pas de caractères spéciaux ou d'emoji.
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <i class="bi bi-telephone-fill"></i>
+                                        {{ form_widget(form.phone, {'attr': {'class': 'form-control',  'placeholder':'Téléphone', 'value':app.user.phone }}) }}
+                                        <div class="form-error fst-italic">
+                                            {{ form_errors(form.phone) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <i class="bi bi-telephone-fill"></i>
+                                        {{ form_widget(form.fonction, {'attr': {'class': 'form-control',  'placeholder':'Fonction', 'value':app.user.fonction }}) }}
+                                        <div class="form-error fst-italic">
+                                            {{ form_errors(form.fonction) }}
+                                        </div>
+                                    </div>
+
+                                        {{ form_widget(form.valider, {'attr': {'class': 'btn btn-primary btn-sm'}}) }}
+                                    </div>
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+{% endblock %}

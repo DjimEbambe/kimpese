@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Patient{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Patient</h1>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-bordered">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ patient.id }}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ patient.name }}</td>
+                </tr>
+                <tr>
+                    <th>Middlemane</th>
+                    <td>{{ patient.middlemane }}</td>
+                </tr>
+                <tr>
+                    <th>Diagnotic</th>
+                    <td>{{ patient.diagnotic }}</td>
+                </tr>
+                <tr>
+                    <th>Traitement</th>
+                    <td>{{ patient.traitement }}</td>
+                </tr>
+                <tr>
+                    <th>Observation</th>
+                    <td>{{ patient.observation }}</td>
+                </tr>
+                <tr>
+                    <th>Age</th>
+                    <td>{{ patient.age }}</td>
+                </tr>
+                <tr>
+                    <th>Sex</th>
+                    <td>{{ patient.sex }}</td>
+                </tr>
+                <tr>
+                    <th>DateAdmin</th>
+                    <td>{{ patient.dateAdmin ? patient.dateAdmin|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Lit</th>
+                    <td>{{ patient.lit }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <a href="{{ path('patient_index') }}"><i class="bi bi-skip-backward-fill"></i>  back to list</a><br>
+            </div>
+            <div class="col-6 text-end">
+                <a href="{{ path('patient_edit', {'id': patient.id}) }}"><i class="bi bi-pen-fill"></i>  edit</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

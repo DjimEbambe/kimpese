@@ -1,19 +1,272 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-set-darkmode-onload="true">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="{{ asset('build/style.css') }}">
         {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
+            <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         {% endblock %}
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
+        <script>
+            if (window.matchMedia("(prefers-color-scheme: dark)").media === "not all") {
+                document.documentElement.style.display = "none";
+                document.head.insertAdjacentHTML(
+                    "beforeend",
+                    "<link id=\"css\" rel=\"stylesheet\" href=\"{{ asset('build/app.css') }}\" onload=\"document.documentElement.style.display = ''\">"
+                );
+            }
+        </script>
+        <!-- Load the alternate CSS first ...
+             in this case the Bootstrap-Dark Variant CSS -->
+        <link id="css-dark" href="{{ asset('build/appdark.css') }}" rel="stylesheet"media="(prefers-color-scheme: dark)">
+        <!-- and then the primary CSS last ...
+             in this case the (original) Bootstrap Variant CSS -->
+        <link id="css-light" href="{{ asset('build/app.css') }}" rel="stylesheet" media="(prefers-color-scheme: light)">
+
+        <title>Hello, world!</title>
+
+        <!--
+  *************************************************************************
+  *** CODE FOR THE TOGGLE BUTTON STARTS HERE
+  *************************************************************************
+-->
+
+        <script>
+            // from: https://stackoverflow.com/questions/9899372#9899701
+            function docReady(fn) {
+                // see if DOM is already available
+                if (document.readyState === "complete" || document.readyState === "interactive") {
+                    // call on next available tick
+                    setTimeout(fn, 1);
+                } else {
+                    document.addEventListener("DOMContentLoaded", fn);
+                }
+            }
+
+            docReady(function() {
+                // DOM is loaded and ready for manipulation from here
+
+                // parts from: https://radek.io/posts/secret-darkmode-toggle/
+
+                const toggle_btn = document.getElementById('toggle-btn');
+                var isCssInit = false;
+
+                function setColorPreference(color_p, persist = false) {
+                    const new_s = color_p;
+                    const old_s = color_p === 'light' ? 'dark' : 'light'
+
+                    const el = document.body;  // gets root <html> tag
+                    el.classList.add('color-scheme-' + new_s);
+                    el.classList.remove('color-scheme-' + old_s);
+
+                    if (persist) {
+                        localStorage.setItem('preferred-color-scheme', color_p);
+                    }
+                }
+
+                function updateUI(color_p, id = 'css') {
+                    toggle_btn.checked = color_p === 'dark';
+
+                    if (isCssInit) {
+                        const el = document.querySelector('#'+id);
+                        const data = el.dataset;
+                        if (toggle_btn.checked) {
+                            el.setAttribute('href', data.hrefDark)
+                        } else {
+                            el.setAttribute('href', data.hrefLight);
+                        }
+                        data.colorScheme = color_p;
+                    }
+                }
+
+                function initColorCSS(color_p, id = 'css') {
+                    isCssInit = true;
+
+                    el_o = document.querySelector('#'+id);
+                    if (el_o !== null) el_o.remove();
+                    el_l = document.querySelector('#'+id+'-light');
+                    el_d = document.querySelector('#'+id+'-dark');
+                    if (color_p === 'dark') {
+                        el = el_d;
+                        el_o = el_l;
+                    } else {
+                        el = el_l;
+                        el_o = el_d;
+                    }
+                    el.setAttribute('data-href-light', el_l.getAttribute('href'));
+                    el.setAttribute('data-href-dark', el_d.getAttribute('href'));
+                    el.setAttribute('data-color-scheme', color_p);
+                    el.setAttribute('media', 'all');
+                    el.setAttribute('id', id);
+                    el_o.remove();
+                }
+
+                toggle_btn.addEventListener('click', () => {
+                    const color_p = toggle_btn.checked ? 'dark' : 'light';
+
+                    if (!isCssInit) initColorCSS(color_p);
+
+                    setColorPreference(color_p, true);
+                    updateUI(color_p);
+                });
+
+                document.addEventListener("keypress", function(event){
+                    var keyName = event.key;
+                    if ((keyName == 'd') || (keyName == 'D')) {
+                        toggle_btn.click();
+                    }
+                });
+
+                /* Set Preference on load */
+                const osColorPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                // console.log('OS wants ' + osColorPreference);
+                var preferredColorScheme = localStorage.getItem('preferred-color-scheme');
+                if (preferredColorScheme !== null) {
+                    initColorCSS(preferredColorScheme);
+                } else {
+                    preferredColorScheme = osColorPreference;
+                }
+                setColorPreference(preferredColorScheme, false);
+                updateUI(preferredColorScheme);
+            });
+        </script>
+
     </head>
-    <body>
-        {% block body %}{% endblock %}
+
+    <body class="bg-body" id="container">
+        <nav class = 'navbar navbar-expand-md navbar-dark fixed-top p-0 mb-2 mb-3'>
+            <div class = 'container-fluid' style="color: #ffffff; background-color:#414141;">
+                {# <a class = 'navbar-brand ' href = '#'>Logo</a> #}
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link {% if  app.request.get('_route')=='home'  %} active {% endif %}" aria-current="page" href="{{path('home')}}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  {% if  app.request.get('_route')=='patient_index'  %} active {% endif %}" href="{{path('patient_index')}}">Patient</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Blog</a>
+                    </li>
+                </ul>
+
+                <form class="ms-auto d-flex">
+                    <ul class="nav nav-tabs d-none d-md-flex">
+                        {% if  app.user  %}
+                            {% if is_granted('ROLE_ADMIN')  %}
+                                <p>
+                                    <small class="p-2">Vous etes administrateur <a href="{{ path('admin') }}" class="p-2">Accéder au backoffice</a></small>
+                                </p>
+                            {% endif %}
+
+                            <li class="nav-item">
+                                <a class="nav-link {% if  app.request.get('_route')=='account'  %} active {% endif %}" aria-current="page" href="{{path('account')}}">Mon compte</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{path('app_logout')}}">Déconnexion</a>
+                            </li>
+
+                        {% else  %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if  app.request.get('_route')=='app_login'  %} active {% endif %}" aria-current="page" href="{{path('app_login')}}">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if  app.request.get('_route')=='register'  %} active {% endif %}" aria-current="page" href="{{path('register')}}">Inscription</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <i class="bi bi-sun-fill" style="color: yellow"></i>
+                    <div class="form-check form-switch tooltip-demo">
+                        <input class="form-check-input" type="checkbox" id="toggle-btn" title="" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Toggle Dark Mode or press [D] hot-key">
+                        <label class="form-check-label" for="toggle-btn"></label>
+                    </div>
+                    <i class="bi bi-moon"></i>
+                </form>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class = 'offcanvas offcanvas-start-lg'  tabindex = '-1' id = 'offcanvasExample' aria-labelledby = 'offcanvasExampleLabel'>
+                <div class = 'offcanvas-header d-flex d-lg-none'>
+                    <div class=" col py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="129" height="130" preserveAspectRatio="xMidYMid meet" viewBox="0 0 448 512"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" fill="currentColor"/></svg>
+                    </div>
+                </div>
+                <div class = 'offcanvas-body '>
+                    {% if  app.user  %}
+                        <p class="p-2">Dr {{ app.user.name }}</p>
+                        {% if is_granted('ROLE_ADMIN')  %}
+                            <small class="p-2">Vous etes administrateur</small><br>
+                                    <a href="{{ path('admin') }}" class="p-2">Accéder au backoffice</a>
+                        {% endif %}
+                        <div class="list-group">
+                            <a href="{{path('account')}}" class="list-group-item list-group-item-action {% if  app.request.get('_route')=='account'  %} active {% endif %} " aria-current="true">
+                                Mon compte
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action mb-4">Mes articles</a>
+                            <a href="{{path('app_logout')}}" class="list-group-item list-group-item-action ">Déconnexion</a>
+                        </div>
+                    {% else  %}
+                        <p class="p-2">Pas connecter</p>
+                        <div class="list-group">
+                            <a href="{{path('app_login')}}" class="list-group-item list-group-item-action mb-2 {% if  app.request.get('_route')=='app_login'  %} active {% endif %}" aria-current="true">
+                                Se connecter
+                            </a>
+                            <a href="{{path('register')}}" class="list-group-item list-group-item-action {% if  app.request.get('_route')=='register'  %} active {% endif %}">S'inscrire</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid" id="conteneur">
+            {% block content %}{% endblock %}
+        </div>
+        <footer class="footer allButFooter" id="footer">
+            <div class="footer-left col-md-4 col-sm-6">
+                <p class="about">
+                    <span> A propos </span> Ut congue augue non tellus bibendum, in varius tellus condimentum. In scelerisque nibh tortor, sed rhoncus odio condimentum in. Sed sed est ut sapien ultrices eleifend.
+                </p>
+                <div class="icons">
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-twitter"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-github"></i></a>
+                    <a href="#"><i class="bi bi-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-center col-md-4 col-sm-6">
+                <div>
+                    <p><span> Adresse</span> </p>
+                </div>
+                <div>
+                    <p>Ville, pays</p>
+                </div>
+                <div>
+                    <p> (+00) 0000 000 000</p>
+                </div>
+                <div>
+
+                    <p><a href="#"> office@company.com</a></p>
+                </div>
+            </div>
+            <div class="footer-right col-md-4 col-sm-6">
+                <h2> <span> logo</span></h2>
+                <p class="menu">
+                    <a href="#"> Accueil</a> |
+                    <a href="#"> Services</a> |
+                    <a href="#"> Actualité</a> |
+                    <a href="#"> Contact</a>
+                </p>
+                <p class="name"> Kimpese sarl &copy; 2021</p>
+            </div>
+        </footer>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('bundle') }}
+        {% endblock %}
     </body>
 </html>

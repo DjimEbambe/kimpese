@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+        <div class="auth">
+            <div class="container mt-1 mb-1 mt-5">
+                <div class="progresses py-4">
+                    <ul class="d-flex align-items-center justify-content-between">
+                        <li id="step-1" class="blue"></li>
+                        <li id="step-2"></li>
+                        <li id="step-3" class="bi bi-check"></li>
+                    </ul>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card px-5">
+                            <h5 class="mt-3">Join over 25 million <br> learners from</h5> <small class="mt-2 text-muted">Master </small>
+                            {{ form_start(form) }}
+                            <div class="form-input">
+                                <i class="bi bi-person-fill"></i>
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control2',  'placeholder':'Nom complet'}}) }}
+                                <div class="form-error fst-italic">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                                <div id="passwordHelpBlock" class="form-help">
+                                    4-30 caractères, pas de caractères spéciaux ou d'emoji.
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <i class="bi bi-telephone-fill"></i>
+                                {{ form_widget(form.phone, {'attr': {'class': 'form-control2',  'placeholder':'Téléphone'}}) }}
+                                <div class="form-error fst-italic">
+                                    {{ form_errors(form.phone) }}
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <i class="bi bi-key-fill"></i>
+                                {{ form_widget(form.password.first, {'attr': {'class': 'form-control2',  'placeholder':'Mot de passe'}}) }}
+                                <div class="form-error fst-italic">
+                                    {{ form_errors(form.password.first) }}
+                                </div>
+                                <div id="passwordHelpBlock" class="form-help">
+                                    8-20 pas d'espaces de caractères spéciaux ou d'emoji.
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <i class="bi bi-key-fill"></i>
+                                {{ form_widget(form.password.second, {'attr': {'class': 'form-control2',  'placeholder':'Comfirmer mot de passe'}}) }}
+                                <div class="form-error fst-italic">
+                                    {{ form_errors(form.password.second) }}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                {{ form_widget(form.valider, {'attr': {'class': 'btn btn-primary btn-sm'}}) }}
+                            </div>
+                            {{ form_end(form) }}
+                            <div class="text-center mt-3"> <span>Or continue with these social profile</span> </div>
+                            <div class="d-flex justify-content-center mt-4"> <span class="social"><i class="bi bi-google"></i></span> <span class="social"><i class="bi bi-facebook"></i></span> <span class="social"><i class="bi bi-twitter"></i></span> <span class="social"><i class="bi bi-linkedin"></i></span> </div>
+                            <div class="text-center mt-4"> <span>Already a member?</span> <a href="#" class="text-decoration-none">Login</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
